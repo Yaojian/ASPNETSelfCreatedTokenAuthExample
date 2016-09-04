@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.AspNet.Mvc;
 using System.IdentityModel.Tokens;
 using System.Security.Claims;
-using Microsoft.AspNet.Authorization;
 using System.Security.Principal;
-using Microsoft.AspNet.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TokenAuthExampleWebApplication.Controllers
 {
@@ -98,7 +97,7 @@ namespace TokenAuthExampleWebApplication.Controllers
             // For now, just creating a simple generic identity.
             ClaimsIdentity identity = new ClaimsIdentity(new GenericIdentity(user, "TokenAuth"), new[] { new Claim("EntityID", "1", ClaimValueTypes.Integer) });
 
-            var securityToken = handler.CreateToken(
+            var securityToken = handler.CreateJwtSecurityToken(
                 issuer: tokenOptions.Issuer,
                 audience: tokenOptions.Audience,
                 signingCredentials: tokenOptions.SigningCredentials,

@@ -1,13 +1,37 @@
-# ASP.NET Self-created token authentication example
-A simple example of how to protect an ASP.NET 5 / MVC 6 project using simple self-created JWT bearer tokens for local username/password checking. Working against RC1 as of 19/11/2015 - see the beta8 and beta7 branches if you're using older framework versions.
+This repository is forked from https://github.com/mrsheepuk/ASPNETSelfCreatedTokenAuthExample.
 
-**DO NOT USE AS-IS IN PRODUCTION**
+I updated the code to ASP.NET Core 1.0.
 
-This example is to show the principles required to acheive local token authentication, and **the following things should be changed before production usage**:
+## Build and run the project
 
-1. The random-generated private keys in Startup.cs should be changed and factored out to some sort of secure storage and shared amongst all app servers serving your site. Using the data protection API to ensure the keys are rotated and secured would be perfect, but I've not worked out how to do that yet (please submit a pull request if you get that working!).
-2. The error handling is very simple - and may leak application info to the end users as it returns the exception message.
-3. The username and password checking using an "if" statement should be replaced with checking against some sort of repository, and identities generated from that.
-4. Consider whether the token refresh strategy (the TokenController Get action) is appropriate for your application - [this StackOverflow question and answer may help you decide what is best for your application](http://stackoverflow.com/questions/26739167/jwt-json-web-token-automatic-prolongation-of-expiration)
+1. Clone the repository
+2. Run `dotnet restore` from the command line under the root of the repository directory
+3. Run `dotnet run` to run the application
 
-You can find more information about the principles in [my StackOverflow answer here](http://stackoverflow.com/a/33217122/789529). This strategy is based on [this StackOverflow answer](http://stackoverflow.com/a/29698502/789529) to the same question by @mdekrey, updated for the RC1 and rationalised to be a slightly simpler, complete example.
+## Test the application
+
+Personally I recommand [Postman](https://www.getpostman.com) to test web apis.
+
+### 1. Get the token
+
+```
+POST /api/token HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+
+{
+    "username": "TEST",
+    "password": "TEST"
+}
+```
+
+### 2. Call an authorized api with the token retrieved above
+
+```
+GET /api/Values/1 HTTP/1.1
+Host: localhost:5000
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IlRFU1QiLCJFbnRpdHlJRCI6MSwibmJmIjoxNDcyOTgxODYyLCJleHAiOjE0NzI5ODE5ODIsImlhdCI6MTQ3Mjk4MTg2MiwiaXNzIjoiRXhhbXBsZUlzc3VlciIsImF1ZCI6IkV4YW1wbGVBdWRpZW5jZSJ9.QGGEqfcLxjk-mHvVEHg91IKWY971W2id4LehRxrDssHsiOMW4wJxCTYRg1ec8IjifJWevJeznqLawZdpqKz0UjRQFJ11QXYRXGTzg4PmJKvTj9kyVDcsYvFNPmjLDbr0Wp8Wos3nTz81PTiod3R-32L2hjCOK1fPpQuKLwjhwBqjdwd6zoolvaMv7i8pRIRjWYqOLZcZ5zzmhVzXHgl1mYTaSqce3ecgZQfPxKV7HfJS_tXcrCfj06OYd1rwz6SOhN-sNbtr88_VS12qUQJu11OmeRLclJf4Y-AZtnRJqpCtIX1ard7p5KuJSQ1WGSAYuqM-BRBdvqHLga_EJmAWJQ
+```
+
+NOTE: You should change to token to the result in step 1.
